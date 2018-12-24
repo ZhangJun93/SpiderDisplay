@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spider Display</title>
+</head>
+<body>
+    <form class="display-info" action="/display" method="post">
+        <div class="d1" style="text-align: center">
+            <p>数据库名：  {{ form.CollectionName }}</p>
+            <p>  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关键字：  {{ form.KeyWord }}</p>
+        </div>
+
+        <div class="col-sm-offset-2 col-sm-10" style="text-align: center">
+                  <input type="submit" class="btn-default" value="查询" />
+                  <input type="reset" class="btn-default" value="取消" />
+        </div>
+    </form>
+</body>
+</html>

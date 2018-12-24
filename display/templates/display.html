@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询结果</title>
+</head>
+
+<body>
+    <div style="text-align: center">
+            <p>数据库：{{ collection_name }} &nbsp;&nbsp;&nbsp;&nbsp;查询关键词：{{ key_word }}</p>
+            <p>共查询到{{ count }}篇相关文章</p>
+    </div>
+    <div>
+        {% for item in pageInfo %}
+                <tr>
+                    <p>
+                        {{ item.id }}、 标题: &nbsp;&nbsp;&nbsp; <a href="{{ item.url }}" target='_BLANK'>{{ item.title }}</a>
+                    </p>
+                </tr>
+            {% endfor %}
+    </div>
+    <span>
+        {% if pageInfo.has_previous %}
+            <a href="?page={{ pageInfo.previous_page_number }}">前一页</a>
+        {% endif %}
+        <span>
+            &nbsp;&nbsp;{{ current }} / {{ pageInfo.paginator.num_pages }}&nbsp;&nbsp;
+        </span>
+        {% if pageInfo.has_next %}
+            <a href="?page={{ pageInfo.next_page_number }}">下一页</a>
+        {% endif %}
+    </span>
+</body>
+</html>
