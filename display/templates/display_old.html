@@ -23,16 +23,9 @@
         {% if pageInfo.has_previous %}
             <a href="?page={{ pageInfo.previous_page_number }}">前一页</a>
         {% endif %}
-
-        {% for num in page_range %}
-
-            {% if num == current %}
-                <a>{{ num }}</a>
-            {% else %}
-                <a href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
-        {% endfor %}
-
+        <span>
+            &nbsp;&nbsp;{{ current }} / {{ pageInfo.paginator.num_pages }}&nbsp;&nbsp;
+        </span>
         {% if pageInfo.has_next %}
             <a href="?page={{ pageInfo.next_page_number }}">下一页</a>
         {% endif %}

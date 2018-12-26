@@ -4,6 +4,7 @@ from display.MongoOperator import MongoOperator
 from django.template import RequestContext
 from display.utils import find_collectin_name
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from operator import itemgetter
 
 # define database server parameter
 ServerIP = '127.0.0.1'
@@ -22,6 +23,8 @@ def index(request):
 results = []
 collection_name_cn = ''
 key_word = ''
+
+
 def display(request):
         global results, collection_name_cn, key_word
         per_page = 10
@@ -44,13 +47,25 @@ def display(request):
             result_count = resultItem.count()
             item_list = []
             for idx, item in enumerate(resultItem):
-                content = {
-                    "id": idx+1,
-                    "title": item['title'],
-                     "url" : item['url']
-                }
+                # get score
+                score = 0
+                if len(item["content"].strip()) == 0:
+                    continue
+                for key in key_word.split("|"):             # multiple keys
+                    if key in item['title']:
+                        score += 100
+                    else:
+                        score += item['content'].count(key)
                 # content += str(idx) + u"、 标题：" + item['title'] + '\n'
+                content = {
+                    "title": item['title'],
+                    "url": item['url'],
+                    'score': score
+                }
                 item_list.append(content)
+            item_list.sort(key=itemgetter('score'), reverse=True)
+            for idx in range(len(item_list)):
+                item_list[idx]['id'] = idx+1
             results = item_list
             paginator = Paginator(item_list, per_page)
             page = 1
@@ -67,9 +82,9 @@ def display(request):
         except EmptyPage:
             pageInfo = paginator.page(paginator.num_pages)
             current = paginator.num_pages
-        return render(request, 'display.html', {'pageInfo': pageInfo, "count": result_count, "current": current,
-                                                "collection_name": collection_name_cn, "key_word": key_word})
-    # else:
-    #     form = SearchForm()
-    #     return render(request, 'index.html', {'form': form})
+
+        return render(request, 'display.html', {'pageInfo': pageInfo, "count": result_count, "current": pageInfo.number,
+                                                "collection_name": collection_name_cn, "key_word": key_word,
+                                                "page_range": paginator.page_range})
+        # return render(request, 'display.html', locals())
 
